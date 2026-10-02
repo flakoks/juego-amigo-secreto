@@ -1,0 +1,1646 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Extracción de Oro en Relaves | Planta Viñita Azul - UDA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #000000;
+      --bg-surface: #0e1014;
+      --bg-card: rgba(22, 26, 34, 0.75);
+      --bg-card-hover: rgba(30, 36, 48, 0.85);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-focus: rgba(255, 214, 10, 0.4);
+      --text-primary: #f5f5f7;
+      --text-secondary: #86868b;
+      --text-tertiary: #515154;
+      --gold: #ffd60a;
+      --gold-glow: rgba(255, 214, 10, 0.25);
+      --copper: #ff9f0a;
+      --emerald: #30d158;
+      --emerald-glow: rgba(48, 209, 88, 0.2);
+      --cyan: #64d2ff;
+      --coral: #ff453a;
+      --accent-gradient: linear-gradient(135deg, #ffd60a 0%, #ff9f0a 50%, #ff453a 100%);
+      --uda-green: #00875a;
+      --radius-xl: 28px;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --radius-pill: 9999px;
+      --ease-apple: cubic-bezier(0.16, 1, 0.3, 1);
+      --font-main: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-primary);
+      font-family: var(--font-main);
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Ambient dynamic glow in the background */
+    .ambient-glow {
+      position: fixed;
+      top: -20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80vw;
+      height: 60vh;
+      background: radial-gradient(circle, rgba(255, 214, 10, 0.07) 0%, rgba(48, 209, 88, 0.03) 40%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+      transition: all 1.2s var(--ease-apple);
+    }
+
+    /* Top Apple Header */
+    header {
+      position: relative;
+      z-index: 50;
+      height: 64px;
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-subtle);
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(20px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .badge-uda {
+      background: rgba(0, 135, 90, 0.18);
+      color: #30d158;
+      border: 1px solid rgba(48, 209, 88, 0.3);
+      padding: 4px 12px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      border-radius: var(--radius-pill);
+      text-transform: uppercase;
+    }
+
+    .brand-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      letter-spacing: -0.2px;
+    }
+
+    .brand-title span {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-icon {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      border-radius: var(--radius-pill);
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: all 0.25s var(--ease-apple);
+    }
+
+    .btn-icon:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: var(--text-primary);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-icon.active {
+      background: var(--gold);
+      color: #000;
+      border-color: var(--gold);
+      font-weight: 600;
+    }
+
+    /* Deck Main Viewport */
+    main#deck {
+      position: relative;
+      flex: 1;
+      z-index: 10;
+      overflow: hidden;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      padding: 40px 60px;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      transform: scale(0.96) translateY(24px);
+      pointer-events: none;
+      transition: opacity 0.65s var(--ease-apple), transform 0.65s var(--ease-apple);
+      overflow-y: auto;
+    }
+
+    .slide.active {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+      pointer-events: all;
+    }
+
+    /* Typography & Hierarchy */
+    .eyebrow {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .eyebrow.gold { color: var(--gold); }
+    .eyebrow.emerald { color: var(--emerald); }
+    .eyebrow.coral { color: var(--coral); }
+    .eyebrow.cyan { color: var(--cyan); }
+
+    .slide-title {
+      font-size: clamp(28px, 4vw, 46px);
+      font-weight: 700;
+      letter-spacing: -1.2px;
+      line-height: 1.08;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+      max-width: 950px;
+    }
+
+    .slide-title .gradient-text {
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .slide-subtitle {
+      font-size: clamp(15px, 1.6vw, 19px);
+      font-weight: 400;
+      color: var(--text-secondary);
+      line-height: 1.45;
+      max-width: 780px;
+      margin-bottom: 28px;
+    }
+
+    /* Grid & Cards */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      width: 100%;
+      margin-top: auto;
+      margin-bottom: auto;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 24px 26px;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(24px);
+      transition: transform 0.35s var(--ease-apple), border-color 0.35s, background 0.35s;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      background: var(--bg-card-hover);
+      border-color: rgba(255, 255, 255, 0.16);
+    }
+
+    .card-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      margin-bottom: 16px;
+    }
+
+    .card-icon.gold { background: rgba(255, 214, 10, 0.12); color: var(--gold); }
+    .card-icon.emerald { background: rgba(48, 209, 88, 0.12); color: var(--emerald); }
+    .card-icon.coral { background: rgba(255, 69, 58, 0.12); color: var(--coral); }
+    .card-icon.cyan { background: rgba(100, 210, 255, 0.12); color: var(--cyan); }
+
+    .card-num {
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.8px;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .card-num span {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      margin-left: 2px;
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .card-desc {
+      font-size: 13.5px;
+      color: var(--text-secondary);
+      line-height: 1.45;
+    }
+
+    /* Comparison & Interactive Panels */
+    .split-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      align-items: center;
+      flex: 1;
+    }
+
+    .interactive-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      padding: 28px;
+      position: relative;
+    }
+
+    /* Flotation Simulator Graphic */
+    .cell-simulator {
+      position: relative;
+      width: 100%;
+      height: 330px;
+      background: linear-gradient(180deg, rgba(14, 20, 28, 0.9) 0%, rgba(8, 12, 18, 0.95) 100%);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-subtle);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .froth-layer {
+      height: 65px;
+      background: linear-gradient(180deg, rgba(255, 214, 10, 0.45) 0%, rgba(255, 159, 10, 0.25) 100%);
+      border-bottom: 2px dashed rgba(255, 214, 10, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 0 16px;
+      position: relative;
+      z-index: 5;
+    }
+
+    .froth-tag {
+      background: rgba(0, 0, 0, 0.55);
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: var(--radius-pill);
+    }
+
+    .pulp-liquid {
+      position: relative;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .bubble {
+      position: absolute;
+      background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.9), rgba(100, 210, 255, 0.3));
+      border-radius: 50%;
+      pointer-events: none;
+      animation: floatUp 3s infinite linear;
+    }
+
+    .gold-spec {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: var(--gold);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--gold);
+      pointer-events: none;
+    }
+
+    .gangue-spec {
+      position: absolute;
+      width: 5px;
+      height: 5px;
+      background: #555c68;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: sinkDown 4s infinite linear;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(220px) scale(0.6); opacity: 0; }
+      20% { opacity: 0.9; }
+      90% { opacity: 0.9; }
+      100% { transform: translateY(0px) scale(1.1); opacity: 0; }
+    }
+
+    @keyframes sinkDown {
+      0% { transform: translateY(20px); opacity: 0.8; }
+      100% { transform: translateY(220px); opacity: 0.2; }
+    }
+
+    .impeller {
+      position: absolute;
+      bottom: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 18px;
+      background: #333a44;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .impeller::before {
+      content: '';
+      position: absolute;
+      bottom: 14px;
+      width: 4px;
+      height: 120px;
+      background: #444d5a;
+    }
+
+    /* Slider interactive control */
+    .control-group {
+      margin-top: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .control-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .control-label strong {
+      color: var(--gold);
+    }
+
+    input[type=range] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.1);
+      outline: none;
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--gold);
+      cursor: pointer;
+      box-shadow: 0 0 10px var(--gold-glow);
+    }
+
+    /* Interactive Beaker Chart */
+    .beaker-compare {
+      display: flex;
+      gap: 20px;
+      align-items: flex-end;
+      height: 220px;
+      padding-bottom: 20px;
+    }
+
+    .beaker {
+      flex: 1;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.03);
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      border-top: none;
+      border-radius: 0 0 16px 16px;
+      position: relative;
+      display: flex;
+      flex-direction: column-reverse;
+      overflow: hidden;
+      padding: 4px;
+    }
+
+    .beaker-fill-solid {
+      background: linear-gradient(180deg, #b08d57 0%, #7d5e30 100%);
+      transition: height 0.4s var(--ease-apple);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .beaker-fill-water {
+      background: rgba(100, 210, 255, 0.35);
+      transition: height 0.4s var(--ease-apple);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--cyan);
+    }
+
+    /* Scatter Plot SVG canvas */
+    .chart-container {
+      width: 100%;
+      height: 280px;
+      position: relative;
+    }
+
+    /* Bottom Control Bar */
+    footer {
+      position: relative;
+      z-index: 50;
+      height: 70px;
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--border-subtle);
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(20px);
+    }
+
+    .slide-progress {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .progress-pill {
+      width: 28px;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 2px;
+      transition: all 0.3s var(--ease-apple);
+      cursor: pointer;
+    }
+
+    .progress-pill.active {
+      width: 48px;
+      background: var(--gold);
+    }
+
+    .slide-counter {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .nav-buttons {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-nav {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.25s var(--ease-apple);
+    }
+
+    .btn-nav:hover {
+      background: rgba(255, 255, 255, 0.18);
+      border-color: rgba(255, 255, 255, 0.3);
+      transform: scale(1.05);
+    }
+
+    .btn-nav:active {
+      transform: scale(0.95);
+    }
+
+    /* Speaker Notes Modal */
+    .notes-drawer {
+      position: fixed;
+      bottom: 70px;
+      right: 32px;
+      width: 380px;
+      max-height: 400px;
+      background: rgba(18, 22, 28, 0.95);
+      border: 1px solid var(--border-focus);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      z-index: 100;
+      backdrop-filter: blur(30px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+      transform: translateY(20px);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.35s var(--ease-apple);
+      overflow-y: auto;
+    }
+
+    .notes-drawer.open {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .notes-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .notes-body {
+      font-size: 13.5px;
+      color: #d1d1d6;
+      line-height: 1.5;
+    }
+
+    /* Grid Lightbox Modal */
+    .lightbox-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.88);
+      backdrop-filter: blur(30px);
+      z-index: 200;
+      display: none;
+      flex-direction: column;
+      padding: 40px;
+    }
+
+    .lightbox-modal.active {
+      display: flex;
+    }
+
+    .lightbox-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .lightbox-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      overflow-y: auto;
+      flex: 1;
+      padding-right: 8px;
+    }
+
+    .lightbox-thumb {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 18px;
+      cursor: pointer;
+      transition: all 0.25s var(--ease-apple);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 140px;
+    }
+
+    .lightbox-thumb:hover {
+      border-color: var(--gold);
+      transform: translateY(-3px);
+      background: var(--bg-card-hover);
+    }
+
+    .lightbox-thumb.active {
+      border-color: var(--gold);
+      box-shadow: 0 0 20px var(--gold-glow);
+    }
+
+    .thumb-num {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 1px;
+    }
+
+    .thumb-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-top: 8px;
+    }
+
+    /* Callout & Stat Badges */
+    .stat-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 6px 14px;
+      border-radius: var(--radius-pill);
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .stat-pill strong {
+      color: var(--text-primary);
+    }
+
+    .stat-pill.warn {
+      background: rgba(255, 69, 58, 0.12);
+      border-color: rgba(255, 69, 58, 0.3);
+      color: var(--coral);
+    }
+
+    .stat-pill.success {
+      background: rgba(48, 209, 88, 0.12);
+      border-color: rgba(48, 209, 88, 0.3);
+      color: var(--emerald);
+    }
+
+    /* Tooltip */
+    [data-tooltip] {
+      position: relative;
+      cursor: help;
+    }
+
+    /* Print styles */
+    @media print {
+      body { overflow: visible; height: auto; }
+      header, footer, .btn-icon, .notes-drawer { display: none; }
+      .slide { position: relative; opacity: 1; transform: none; page-break-after: always; min-height: 100vh; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Ambient Glow -->
+  <div class="ambient-glow" id="ambientGlow"></div>
+
+  <!-- Top Apple Nav -->
+  <header>
+    <div class="brand">
+      <div class="badge-uda">UDA Metalurgia</div>
+      <div class="brand-title">
+        <span>Relave N.º 1 Viñita Azul</span> · Auditoría & Diseño Experimental
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <button class="btn-icon" id="btnNotes" title="Ver notas del orador (Teclado: N)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        Notas
+      </button>
+
+      <button class="btn-icon" id="btnGrid" title="Ver todas las láminas (Teclado: G)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+        Índice
+      </button>
+
+      <button class="btn-icon" id="btnFullscreen" title="Pantalla Completa (Teclado: F)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+        Pantalla
+      </button>
+    </div>
+  </header>
+
+  <!-- Deck Container -->
+  <main id="deck">
+
+    <!-- SLIDE 1: PORTADA -->
+    <section class="slide active" data-index="0" data-title="Portada">
+      <div style="margin: auto 0;">
+        <div class="eyebrow gold">
+          <span>●</span> INVESTIGACIÓN APLICADA · ELECTIVO III INGENIERÍA
+        </div>
+        <h1 class="slide-title">
+          Extracción de Metales en <br>
+          <span class="gradient-text">Relaves Sulfurados</span>
+        </h1>
+        <p class="slide-subtitle">
+          Auditoría de consistencia física, verificación de balances de pulpa y programa de confirmación para el Relave N.º 1 de Planta Viñita Azul, Copiapó, Región de Atacama.
+        </p>
+
+        <div style="display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 32px;">
+          <div class="stat-pill">
+            <span style="color: var(--text-secondary);">Autores:</span>
+            <strong>H. Tabilo, D. Segura, L. Cortez, E. Pasarin</strong>
+          </div>
+          <div class="stat-pill">
+            <span style="color: var(--text-secondary);">Profesor Guía:</span>
+            <strong>Pablo Catalán Véliz</strong>
+          </div>
+          <div class="stat-pill success">
+            <span>Universidad de Atacama · 2026</span>
+          </div>
+        </div>
+
+        <div class="cards-grid" style="margin-top: 24px;">
+          <div class="card">
+            <div class="card-icon gold">⚖️</div>
+            <div class="card-title">Auditoría Rigurosa</div>
+            <div class="card-desc">Reconstrucción paso a paso de 36,29 kg de muestra, tamizajes y picnometrías.</div>
+          </div>
+          <div class="card">
+            <div class="card-icon cyan">💧</div>
+            <div class="card-title">Cálculo de Pulpa</div>
+            <div class="card-desc">Resolución del desbalance entre base másica (35%) vs base volumétrica errónea (+130%).</div>
+          </div>
+          <div class="card">
+            <div class="card-icon emerald">🎯</div>
+            <div class="card-title">Diseño 15 Ensayos</div>
+            <div class="card-desc">Programa factorial $2^2$ con puntos centrales para evaluar pH y colector con rigor científico.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 2: EL PROBLEMA NACIONAL -->
+    <section class="slide" data-index="1" data-title="Contexto & Relaves">
+      <div class="eyebrow emerald"><span>●</span> EL DESAFÍO EN CHILE</div>
+      <h2 class="slide-title">¿Pasivo Ambiental o Tesoro Oculto?</h2>
+      <p class="slide-subtitle">
+        Chile cuenta con más de 764 depósitos de relaves. La minería secundaria busca valorizar estos pasivos extrayendo oro y cobre remanentes, pero una ilusión matemática no hace un negocio viable.
+      </p>
+
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card-icon emerald">🏔️</div>
+          <div class="card-num">764<span>depósitos</span></div>
+          <div class="card-title">Catastro Nacional Cochilco</div>
+          <div class="card-desc">Oportunidad masiva de reprocesamiento, recuperación de agua y estabilización física-química.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon gold">⛏️</div>
+          <div class="card-num">30.000<span>t</span></div>
+          <div class="card-title">Relave N.º 1 Viñita Azul</div>
+          <div class="card-desc">Tratamiento histórico de mineral de Veta Gruesa en Copiapó. Ley estimada de 2,50 g Au/t.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon cyan">🎯</div>
+          <div class="card-num">40<span>g Au/t</span></div>
+          <div class="card-title">Meta Teórica de Proyecto</div>
+          <div class="card-desc">Exigencia de obtener un concentrado comercial de 40 g/t con 50% de recuperación de oro.</div>
+        </div>
+      </div>
+
+      <div style="margin-top: 24px; padding: 16px 20px; background: rgba(255, 214, 10, 0.08); border-left: 3px solid var(--gold); border-radius: 8px;">
+        <span style="font-size: 13.5px; color: #e5e5ea;">
+          <strong>Regla de Oro en Metalurgia:</strong> Una alta ley de alimentación no garantiza flotabilidad. Si no cerramos balances trazables, lo que parece "oro recuperado" es solo lodo arrastrado por el agua.
+        </span>
+      </div>
+    </section>
+
+    <!-- SLIDE 3: CÓMO FUNCIONA LA FLOTACIÓN (SIMULADOR DIDÁCTICO) -->
+    <section class="slide" data-index="2" data-title="Simulador de Flotación">
+      <div class="eyebrow gold"><span>●</span> FÍSICO-QUÍMICA DIDÁCTICA</div>
+      <h2 class="slide-title">La Fiesta de las Burbujas</h2>
+      <p class="slide-subtitle">
+        ¿Cómo separamos partículas microscópicas de oro de la roca estéril? Usamos burbujas de aire y reactivos químicos que actúan como "pegamento selectivo".
+      </p>
+
+      <div class="split-layout">
+        <!-- Interactive simulator visual -->
+        <div class="cell-simulator" id="cellSim">
+          <div class="froth-layer">
+            <span class="froth-tag">Espuma Concentrada (Oro + Sulfuros)</span>
+            <span class="froth-tag" style="border-color: var(--copper); color: var(--copper);">Cobre / Calcopirita</span>
+          </div>
+          <div class="pulp-liquid" id="pulpArea">
+            <div class="impeller"></div>
+            <!-- Bubbles injected by JS -->
+          </div>
+        </div>
+
+        <!-- Explanations & Controls -->
+        <div class="interactive-box">
+          <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+            <div class="stat-pill success">Burbuja + Reactivo = Flotación</div>
+          </div>
+          <div style="font-size: 14px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 20px;">
+            <p><strong>1. Colector Primario:</strong> Hace que los sulfuros que portan oro sean "hidrofóbicos" (temen al agua) y se peguen a las burbujas de aire que suben.</p>
+            <p style="margin-top: 8px;"><strong>2. Modificador de pH (Cal):</strong> Controla la acidez/alcalinidad para deprimir la pirita inservible y priorizar metales de interés.</p>
+            <p style="margin-top: 8px;"><strong>3. Espumante:</strong> Da elasticidad y estabilidad a las burbujas para que no revienten antes de rebalsar.</p>
+          </div>
+
+          <div class="control-group">
+            <div class="control-label">
+              <span>Caudal de Aire & Dosis Colector:</span>
+              <strong id="simStatusText">Actividad Normal</strong>
+            </div>
+            <input type="range" id="simSlider" min="1" max="5" value="3">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 4: AUDITORÍA FORENSE - LAS 4 DISCREPANCIAS -->
+    <section class="slide" data-index="3" data-title="Auditoría Forense">
+      <div class="eyebrow coral"><span>●</span> INVESTIGACIÓN RIGUROSA</div>
+      <h2 class="slide-title">Los 4 Cabos Sueltos del Laboratorio</h2>
+      <p class="slide-subtitle">
+        Antes de gastar millones de pesos en reactivos, auditamos cada pesaje histórico. Descubrimos fallas críticas que impedían confiar en los resultados previos.
+      </p>
+
+      <div class="cards-grid">
+        <div class="card" style="border-color: rgba(255, 69, 58, 0.3);">
+          <div class="card-icon coral">⚖️</div>
+          <div class="card-title">1. Desbalance en Masa</div>
+          <div class="card-desc">
+            El lote real inició con <strong>36.290,5 g</strong> (no 62 kg). La etapa 1 tuvo una ganancia aparente de +71,5 g y una asimetría de corte de ±8,89% en la etapa 4.
+          </div>
+        </div>
+
+        <div class="card" style="border-color: rgba(255, 69, 58, 0.3);">
+          <div class="card-icon coral">📏</div>
+          <div class="card-title">2. Paradoja del Tamaño</div>
+          <div class="card-desc">
+            La planilla reporta un $D_{80} = 8,43\text{ mm}$ rotulado como <em>"mineral fresco"</em>, mientras que el relave real debe ser un polvo fino de $74\ \mu\text{m}$.
+          </div>
+        </div>
+
+        <div class="card" style="border-color: rgba(255, 69, 58, 0.3);">
+          <div class="card-icon coral">🧮</div>
+          <div class="card-title">3. Confusión Masa vs Volumen</div>
+          <div class="card-desc">
+            Dos pestañas de Excel calcularon la pulpa con fórmulas opuestas. Una usó 35% en peso y la otra 35% en volumen (+130% más de mineral).
+          </div>
+        </div>
+
+        <div class="card" style="border-color: rgba(255, 69, 58, 0.3);">
+          <div class="card-icon coral">🔍</div>
+          <div class="card-title">4. Trazabilidad Huérfana</div>
+          <div class="card-desc">
+            Muestras con colores beige y gris mezcladas en fotos de laboratorio sin bitácora de cadena de custodia ni certificados químicos oficiales.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 5: EL ERROR DEL 130% DE LA PULPA -->
+    <section class="slide" data-index="4" data-title="El Error de la Pulpa">
+      <div class="eyebrow cyan"><span>●</span> BALANCES GRAVIMÉTRICOS</div>
+      <h2 class="slide-title">¿35% en Masa o 35% en Volumen?</h2>
+      <p class="slide-subtitle">
+        Una confusión de conceptos que cambia radicalmente un experimento: confundir el porcentaje en peso con el porcentaje en espacio físico.
+      </p>
+
+      <div class="split-layout">
+        <!-- Interactive Visual Beaker -->
+        <div class="interactive-box">
+          <div style="font-size: 12px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 12px;">
+            Comparativa en Celda de 3,08 Litros ($\rho_s = 3,00\text{ g/cm}^3$)
+          </div>
+
+          <div class="beaker-compare">
+            <!-- Beaker 1: Correct Mass % -->
+            <div style="flex: 1; text-align: center;">
+              <div class="beaker" style="height: 190px;">
+                <div class="beaker-fill-water" style="height: 65%;">Agua: 2.611 g</div>
+                <div class="beaker-fill-solid" style="height: 35%;">Sólido: 1.406 g</div>
+              </div>
+              <div style="margin-top: 10px; font-size: 13px; font-weight: 600; color: var(--emerald);">
+                35% en MASA (Correcto)
+              </div>
+              <div style="font-size: 11px; color: var(--text-secondary);">Carga estándar de flotación</div>
+            </div>
+
+            <!-- Beaker 2: Wrong Volume % -->
+            <div style="flex: 1; text-align: center;">
+              <div class="beaker" style="height: 190px; border-color: rgba(255, 69, 58, 0.4);">
+                <div class="beaker-fill-water" style="height: 38%; background: rgba(255, 69, 58, 0.2); color: var(--coral);">Agua: 2.002 g</div>
+                <div class="beaker-fill-solid" style="height: 62%; background: linear-gradient(180deg, #ff453a, #b3261e);">Sólido: 3.234 g</div>
+              </div>
+              <div style="margin-top: 10px; font-size: 13px; font-weight: 600; color: var(--coral);">
+                35% en VOLUMEN (Error Hoja3)
+              </div>
+              <div style="font-size: 11px; color: var(--coral);">¡Sobrecarga de +130% de mineral!</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Explanatory Text -->
+        <div>
+          <div class="card" style="margin-bottom: 16px;">
+            <div class="card-title" style="color: var(--cyan);">El Efecto en Cascada</div>
+            <div class="card-desc" style="font-size: 14px;">
+              Si preparas la pulpa aplicando 35% al volumen, la pulpa termina con <strong>61,76% de sólidos en masa</strong>. Esto convierte la celda en una "pasta espesa", traba el rotor, impide que suban las burbujas y falsea completamente las dosis de reactivos (g/tonelada).
+            </div>
+          </div>
+
+          <div class="stat-pill success" style="width: 100%; margin-bottom: 8px;">
+            <span>✓ Masa de sólido seco corregida:</span>
+            <strong>1.406,09 g</strong>
+          </div>
+          <div class="stat-pill cyan" style="width: 100%; margin-bottom: 8px;">
+            <span>✓ Agua requerida (sin humedad):</span>
+            <strong>2.611,30 g</strong>
+          </div>
+          <div class="stat-pill warn" style="width: 100%;">
+            <span>⚠️ Si el relave tiene 5% humedad:</span>
+            <strong>Pesar 1.480,1 g húmedos y 2.537,3 g agua</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 6: EL MISTERIO GRANULOMÉTRICO (D80) -->
+    <section class="slide" data-index="5" data-title="Granulometría & Liberación">
+      <div class="eyebrow gold"><span>●</span> TAMAÑO DE PARTÍCULA</div>
+      <h2 class="slide-title">¿Piedras o Polvo? La Huella de las Fotos</h2>
+      <p class="slide-subtitle">
+        Una partícula de oro solo puede flotar si está expuesta en la superficie ("liberada"). Si está atrapada dentro de una roca de cuarzo o pirita, jamás flotará.
+      </p>
+
+      <div class="split-layout">
+        <!-- Text & Visual Comparison -->
+        <div>
+          <div class="card" style="margin-bottom: 16px;">
+            <div class="card-num" style="color: var(--coral);">8.432<span>µm (8,4 mm)</span></div>
+            <div class="card-title">D80 Documentado en Hoja2</div>
+            <div class="card-desc">
+              Tamaño de gravilla. El 73,3% de la masa quedó sobre 1,4 mm. Está rotulado explícitamente como <em>"Material Fresco"</em>. ¡No corresponde al relave fino!
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-num" style="color: var(--emerald);">74<span>µm (0,074 mm)</span></div>
+            <div class="card-title">P80 Atribuido al Relave N.º 1</div>
+            <div class="card-desc">
+              Espesor similar al de un cabello humano. Es el tamaño típico de relaves ya molidos en plantas de flotación previas.
+            </div>
+          </div>
+        </div>
+
+        <!-- The Photo Evidence Box -->
+        <div class="interactive-box">
+          <div class="card-title" style="color: var(--gold); margin-bottom: 12px;">
+            📸 El Descubrimiento en las Fotos de Laboratorio
+          </div>
+          <p style="font-size: 13.5px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 16px;">
+            Al revisar las fotos de la investigación (Figuras 3, 5 y 6 del informe), encontramos que:
+          </p>
+          <ul style="font-size: 13px; color: #d1d1d6; line-height: 1.7; padding-left: 20px;">
+            <li>En la tolva y divisor rotatorio se observa un <strong>polvo fino beige</strong>, no gravilla milimétrica.</li>
+            <li>Existe una columna de tamices finos fotografiada: <strong>355, 300, 212, 150, 106 y 53 µm</strong>.</li>
+            <li>Había vasos con fracciones finas pesadas que <em>nunca se transcribieron</em> a la planilla oficial.</li>
+            <li><strong>Conclusión:</strong> El análisis de $8,4\text{ mm}$ no debe usarse para descartar molienda. Es urgente transcribir el tamizaje fino real.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 7: LA VERDAD DEL ORO (GRÁFICO INTERACTIVO) -->
+    <section class="slide" data-index="6" data-title="La Verdad del Oro">
+      <div class="eyebrow coral"><span>●</span> ANÁLISIS DE LAS 13 CORRIDAS</div>
+      <h2 class="slide-title">La Ilusión del Oro: Arrastre vs Concentración</h2>
+      <p class="slide-subtitle">
+        Si sacas más barro de la celda, obviamente tendrás más gramos de oro. Pero si la ley del concentrado sigue siendo igual a la de la tierra original, ¡no hubo concentración!
+      </p>
+
+      <div class="split-layout">
+        <!-- Interactive Canvas Scatter -->
+        <div class="interactive-box">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <span style="font-size: 12px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase;">
+              Recuperación Au (%) vs Rendimiento Másico Y (%)
+            </span>
+            <span class="stat-pill warn" style="font-size: 11px;">Correlación r = 0,997</span>
+          </div>
+
+          <svg class="chart-container" viewBox="0 0 450 250" id="scatterPlot">
+            <!-- Axes -->
+            <line x1="50" y1="210" x2="420" y2="210" stroke="#333" stroke-width="1.5"/>
+            <line x1="50" y1="20" x2="50" y2="210" stroke="#333" stroke-width="1.5"/>
+
+            <!-- Labels -->
+            <text x="235" y="240" fill="#888" font-size="11" text-anchor="middle">Rendimiento Másico Y (% masa concentrado)</text>
+            <text x="20" y="115" fill="#888" font-size="11" text-anchor="middle" transform="rotate(-90 20 115)">Recup. Au (%)</text>
+
+            <!-- Line RE = 1 (No enrichment) -->
+            <line x1="50" y1="210" x2="410" y2="30" stroke="#888" stroke-dasharray="4,4" stroke-width="1.5"/>
+            <text x="350" y="70" fill="#888" font-size="10">RE = 1 (Sin enriquecimiento)</text>
+
+            <!-- Line RE = 16 (The Goal) -->
+            <line x1="50" y1="210" x2="72" y2="30" stroke="#ffd60a" stroke-dasharray="3,3" stroke-width="2"/>
+            <text x="80" y="45" fill="#ffd60a" font-weight="700" font-size="10">Meta Proyecto (RE = 16)</text>
+
+            <!-- 13 Runs Points (Normalized coordinates) -->
+            <!-- Run 1: Y=40.3, R=40.3 -->
+            <circle cx="195" cy="137" r="5" fill="#30d158" class="point-hover" data-info="Corrida 1: Y=40,3% | R=40,3% | RE=1,000"/>
+            <!-- Run 2: Y=56.9, R=56.7 -->
+            <circle cx="255" cy="107" r="5" fill="#30d158" class="point-hover" data-info="Corrida 2: Y=56,9% | R=56,7% | RE=0,996"/>
+            <!-- Run 4: Y=54.2, R=50.6 -->
+            <circle cx="245" cy="118" r="5" fill="#30d158" class="point-hover" data-info="Corrida 4: Y=54,2% | R=50,6% | RE=0,934"/>
+            <!-- Run 6: Y=3.3, R=3.0 -->
+            <circle cx="62" cy="204" r="5" fill="#30d158" class="point-hover" data-info="Corrida 6: Y=3,3% | R=3,0% | RE=0,909"/>
+            <!-- Run 10: Y=8.9, R=9.6 -->
+            <circle cx="82" cy="192" r="5" fill="#30d158" class="point-hover" data-info="Corrida 10: Y=8,9% | R=9,6% | RE=1,079 (Máx RE)"/>
+            <!-- Run 12: Y=3.3, R=3.5 -->
+            <circle cx="62" cy="203" r="5" fill="#30d158" class="point-hover" data-info="Corrida 12: Y=3,3% | R=3,5% | RE=1,061"/>
+            <!-- Run 8: Y=34.3, R=35.8 -->
+            <circle cx="173" cy="145" r="5" fill="#30d158" class="point-hover" data-info="Corrida 8: Y=34,3% | R=35,8% | RE=1,044"/>
+          </svg>
+
+          <div id="chartTooltip" style="font-size: 12px; color: var(--gold); min-height: 18px; text-align: center; font-weight: 600;">
+            Pasa el cursor sobre los puntos verdes
+          </div>
+        </div>
+
+        <!-- Metric Explanation -->
+        <div>
+          <div class="card" style="margin-bottom: 16px;">
+            <div class="card-title">Razón de Enriquecimiento (RE)</div>
+            <div style="font-size: 28px; font-weight: 700; color: var(--gold); margin: 6px 0;">
+              RE ≈ 1,007
+            </div>
+            <div class="card-desc">
+              $\text{RE} = \frac{\text{Recuperación metal}}{\text{Rendimiento masa}} = \frac{\text{Ley concentrado}}{\text{Ley alimentación}}$
+            </div>
+          </div>
+
+          <div class="card" style="border-color: rgba(255, 214, 10, 0.3);">
+            <div class="card-title" style="color: #fff;">Diagnóstico Técnico Inapelable</div>
+            <div class="card-desc" style="font-size: 13.5px;">
+              En todas las 13 corridas históricas, la ley inferida del concentrado fue entre <strong>2,27 y 2,70 g Au/t</strong>, idéntica a la alimentación (2,50 g/t). Las burbujas se limitaron a atrapar pulpa mecánicamente; no hubo selectividad química.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 8: ESTADÍSTICA RIGUROSA ANOVA -->
+    <section class="slide" data-index="7" data-title="Estadística Rigurosa">
+      <div class="eyebrow emerald"><span>●</span> MODELO DE REGRESIÓN LINEAL</div>
+      <h2 class="slide-title">¿Qué Factores Realmente Mueven la Aguja?</h2>
+      <p class="slide-subtitle">
+        Reanalizamos la matriz de 13 corridas con rigor matemático. Con 6 grados de libertad residuales, el modelo global no alcanza significancia estadística formal.
+      </p>
+
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card-num">p = 0,090</div>
+          <div class="card-title">Prueba F Global del Modelo</div>
+          <div class="card-desc">
+            $F(6,6) = 3,23$. Al estar por sobre $0,05$, el conjunto de 6 factores no demuestra estadísticamente que explique la variación de oro.
+          </div>
+        </div>
+
+        <div class="card" style="border-color: rgba(48, 209, 88, 0.4);">
+          <div class="card-num" style="color: var(--emerald);">p = 0,048</div>
+          <div class="card-title">pH del Medio (t = 2,482)</div>
+          <div class="card-desc">
+            Es la <strong>única variable</strong> individual que supera el valor crítico bilateral ($t_{\text{crit}} = 2,447$). El pH alto favorece la recuperación.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-num" style="color: var(--gold);">p = 0,062</div>
+          <div class="card-title">Colector Primario (t = 2,286)</div>
+          <div class="card-desc">
+            Queda apenas por sobre el umbral de 0,05 en prueba bilateral. Aunque no es estrictamente significativo, tiene enorme relevancia técnica.
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 24px; padding: 18px; background: rgba(22, 26, 34, 0.7); border-radius: var(--radius-lg); border: 1px solid var(--border-subtle);">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="font-size: 14px; font-weight: 600; color: #fff;">Decisión de Ingeniería Basada en Evidencia</div>
+            <div style="font-size: 13px; color: var(--text-secondary); margin-top: 4px;">
+              En vez de gastar recursos variando 6 factores a ciegas, aislamos las dos únicas variables prometedoras: <strong>pH</strong> y <strong>Dosis de Colector Primario</strong>.
+            </div>
+          </div>
+          <div class="badge-uda" style="font-size: 12px; padding: 6px 16px;">Estrategia Aprobada</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 9: LA META AURÍFERA (UTOPÍA VS CIENCIA) -->
+    <section class="slide" data-index="8" data-title="Balance de la Meta">
+      <div class="eyebrow gold"><span>●</span> ANÁLISIS DE FACTIBILIDAD</div>
+      <h2 class="slide-title">La Brecha de la Meta: 40 g Au/t</h2>
+      <p class="slide-subtitle">
+        El proyecto soñaba con un concentrado de 40 gramos de oro por tonelada. Calculemos exactamente qué exige esa meta para 100 toneladas de relave.
+      </p>
+
+      <div class="split-layout">
+        <!-- Sankey-like Block Balance -->
+        <div class="interactive-box">
+          <div style="font-size: 12px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 16px;">
+            Balance de Conservación de Masa y Oro (Base 100 t secas a 2,50 g/t)
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 14px;">
+            <div style="background: rgba(255, 255, 255, 0.05); padding: 14px 18px; border-radius: 12px; border-left: 4px solid var(--cyan);">
+              <div style="font-size: 11px; color: var(--cyan); font-weight: 700;">ALIMENTACIÓN TOTAL</div>
+              <div style="font-size: 16px; font-weight: 700; margin-top: 2px;">100 t secas · 2,50 g Au/t · 250 g Oro total</div>
+            </div>
+
+            <div style="display: flex; gap: 12px;">
+              <div style="flex: 1; background: rgba(255, 214, 10, 0.1); padding: 14px; border-radius: 12px; border-left: 4px solid var(--gold);">
+                <div style="font-size: 11px; color: var(--gold); font-weight: 700;">CONCENTRADO META (50% R)</div>
+                <div style="font-size: 18px; font-weight: 700; margin-top: 4px;">3,125 t</div>
+                <div style="font-size: 12px; color: var(--text-secondary);">Ley: 40,0 g Au/t (125 g Au)</div>
+              </div>
+
+              <div style="flex: 1; background: rgba(255, 255, 255, 0.03); padding: 14px; border-radius: 12px; border-left: 4px solid #555;">
+                <div style="font-size: 11px; color: #888; font-weight: 700;">COLA REMANENTE (50%)</div>
+                <div style="font-size: 18px; font-weight: 700; margin-top: 4px;">96,875 t</div>
+                <div style="font-size: 12px; color: var(--text-secondary);">Ley: 1,29 g Au/t (125 g Au)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- The Reality Check -->
+        <div>
+          <div class="card" style="margin-bottom: 16px;">
+            <div class="card-title" style="color: var(--coral);">La Enorme Brecha a Superar</div>
+            <div class="card-desc" style="font-size: 14px; line-height: 1.5;">
+              Para lograr 40 g/t con 50% de recuperación, la flotación necesita una <strong>Razón de Enriquecimiento RE = 16</strong>.<br><br>
+              Hoy las pruebas dan <strong>RE = 1,08</strong>. Es decir, ¡estamos a un factor de 15x de distancia! Ninguna etapa de flotación simple (Rougher) puede dar ese salto sin etapas de limpieza sucesivas (Cleaner).
+            </div>
+          </div>
+
+          <div class="stat-pill warn" style="width: 100%;">
+            <span>Razón de Concentración F/C exigida:</span>
+            <strong>32 a 1 (Solo el 3,125% de la masa debe flotar)</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 10: DISEÑO EXPERIMENTAL 15 ENSAYOS -->
+    <section class="slide" data-index="9" data-title="Diseño Experimental">
+      <div class="eyebrow emerald"><span>●</span> SOLUCIÓN METODOLÓGICA</div>
+      <h2 class="slide-title">La Hoja de Ruta: 15 Ensayos Rigurosos</h2>
+      <p class="slide-subtitle">
+        Diseño Factorial $2^2$ con 3 repeticiones independientes y 3 puntos centrales, ejecutados en 3 jornadas aleatorizadas para aislar el error experimental.
+      </p>
+
+      <div class="split-layout">
+        <!-- 2^2 Factorial Coordinate Map -->
+        <div class="interactive-box" style="text-align: center;">
+          <div style="font-size: 12px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 12px;">
+            Mapa de Condiciones (pH vs Colector Primario)
+          </div>
+
+          <svg viewBox="0 0 320 220" style="width: 100%; max-height: 200px;">
+            <!-- Grid lines -->
+            <rect x="60" y="40" width="200" height="140" fill="none" stroke="rgba(255,255,255,0.15)" stroke-dasharray="4,4"/>
+
+            <!-- Corner Points -->
+            <!-- C3: pH 9.5, 60 g/t -->
+            <circle cx="60" cy="40" r="10" fill="#30d158" class="point-hover" data-info="C3: pH 9,5 | 60 g/t (3 repeticiones)"/>
+            <text x="60" y="24" fill="#30d158" font-size="10" font-weight="700" text-anchor="middle">C3 (9,5 / 60)</text>
+
+            <!-- C4: pH 10.5, 60 g/t -->
+            <circle cx="260" cy="40" r="10" fill="#30d158" class="point-hover" data-info="C4: pH 10,5 | 60 g/t (3 repeticiones)"/>
+            <text x="260" y="24" fill="#30d158" font-size="10" font-weight="700" text-anchor="middle">C4 (10,5 / 60)</text>
+
+            <!-- C1: pH 9.5, 40 g/t -->
+            <circle cx="60" cy="180" r="10" fill="#30d158" class="point-hover" data-info="C1: pH 9,5 | 40 g/t (3 repeticiones)"/>
+            <text x="60" y="202" fill="#30d158" font-size="10" font-weight="700" text-anchor="middle">C1 (9,5 / 40)</text>
+
+            <!-- C2: pH 10.5, 40 g/t -->
+            <circle cx="260" cy="180" r="10" fill="#30d158" class="point-hover" data-info="C2: pH 10,5 | 40 g/t (3 repeticiones)"/>
+            <text x="260" y="202" fill="#30d158" font-size="10" font-weight="700" text-anchor="middle">C2 (10,5 / 40)</text>
+
+            <!-- Center Point -->
+            <polygon points="160,100 170,110 160,120 150,110" fill="#ffd60a" class="point-hover" data-info="Centro: pH 10,0 | 50 g/t (3 corridas: inicio, mitad, fin)"/>
+            <text x="160" y="94" fill="#ffd60a" font-size="11" font-weight="700" text-anchor="middle">Centro (10,0 / 50)</text>
+          </svg>
+          <div style="font-size: 11px; color: var(--text-secondary); margin-top: 6px;">Total = 4 vértices × 3 réplicas + 3 centrales = 15 ensayos</div>
+        </div>
+
+        <!-- Strategy points -->
+        <div>
+          <div class="card" style="margin-bottom: 12px;">
+            <div class="card-title">Bloques por Jornada de Trabajo</div>
+            <div class="card-desc">
+              Cada día se ejecuta 1 repetición de cada vértice y 1 central en orden sorteado. Así el cansancio del operador o la temperatura no contaminan los datos.
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">Fraccionamiento Cinético</div>
+            <div class="card-desc">
+              Recolección de espuma a los <strong>0,33 · 0,67 · 1,00 · 1,50 y 2,00 minutos</strong>. Permite ver la curva de velocidad de flotación de cada ensayo.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 11: CONTROL DE CALIDAD Y SEGURIDAD -->
+    <section class="slide" data-index="10" data-title="QA/QC & Seguridad">
+      <div class="eyebrow cyan"><span>●</span> ESTÁNDAR DE LABORATORIO</div>
+      <h2 class="slide-title">Control de Calidad: No Más Dudas</h2>
+      <p class="slide-subtitle">
+        Fijamos umbrales matemáticos de aceptación antes de empezar. Si un ensayo no cumple el balance de masa, se investiga y repite.
+      </p>
+
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card-icon emerald">⚖️</div>
+          <div class="card-num">98% – 102%</div>
+          <div class="card-title">Cierre de Masa Seca</div>
+          <div class="card-desc">Tolerancia máxima de ±2% entre sólidos alimentados y la suma de concentrados más cola final.</div>
+        </div>
+
+        <div class="card">
+          <div class="card-icon gold">🎯</div>
+          <div class="card-num">90% – 110%</div>
+          <div class="card-title">Balance Metalúrgico Au</div>
+          <div class="card-desc">Margen para considerar la incertidumbre propia del análisis de trazas de oro a baja ley.</div>
+        </div>
+
+        <div class="card">
+          <div class="card-icon cyan">🧪</div>
+          <div class="card-num">± 0,10</div>
+          <div class="card-title">Control de pH Operativo</div>
+          <div class="card-desc">Tolerancia estricta del potenciómetro en pulpa antes de dosificar colectores y espumante.</div>
+        </div>
+
+        <div class="card">
+          <div class="card-icon coral">🛡️</div>
+          <div class="card-num">0 Vertidos</div>
+          <div class="card-title">Seguridad & Residuos</div>
+          <div class="card-desc">Manejo seguro de cal y reactivos. Residuos neutralizados y confinados; nada se descarga sin permiso.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 12: CONCLUSIÓN Y DECISIÓN EJECUTIVA -->
+    <section class="slide" data-index="11" data-title="Conclusiones">
+      <div style="margin: auto 0;">
+        <div class="eyebrow emerald"><span>●</span> DECISIÓN TÉCNICA SUSTENTADA</div>
+        <h2 class="slide-title">
+          Avanzar con Ciencia, <br>
+          <span class="gradient-text">No con Ilusiones</span>
+        </h2>
+        <p class="slide-subtitle">
+          El reprocesamiento del Relave N.º 1 de Viñita Azul sigue teniendo mérito técnico para investigación, pero aún no tiene respaldo para prometer un negocio rentable ni un concentrado comercial de 40 g/t.
+        </p>
+
+        <div class="cards-grid" style="margin-top: 28px;">
+          <div class="card">
+            <div class="card-num" style="color: var(--emerald);">PASO 1</div>
+            <div class="card-title">Confirmar Muestra & Leyes</div>
+            <div class="card-desc">Garantizar la identidad del lote del relave, medir humedad real y resolver la picnometría a 0,01 g.</div>
+          </div>
+          <div class="card">
+            <div class="card-num" style="color: var(--gold);">PASO 2</div>
+            <div class="card-title">Ejecutar los 15 Ensayos</div>
+            <div class="card-desc">Comprobar si el pH (9,5 - 10,5) y el colector primario (40 - 60 g/t) logran elevar la RE por sobre 1,0.</div>
+          </div>
+          <div class="card">
+            <div class="card-num" style="color: var(--cyan);">PASO 3</div>
+            <div class="card-title">Evaluar Etapa de Limpieza</div>
+            <div class="card-desc">Solo si se demuestra enriquecimiento selectivo reproducible, diseñar el circuito Rougher-Cleaner.</div>
+          </div>
+        </div>
+
+        <div style="margin-top: 32px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-subtle); padding-top: 20px;">
+          <div style="font-size: 13px; color: var(--text-secondary);">
+            Ingeniería de Ejecución en Metalurgia · <strong>Universidad de Atacama</strong>
+          </div>
+          <button class="btn-icon active" onclick="goToSlide(0)">
+            Volver al Inicio ↺
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Bottom Nav Bar -->
+  <footer>
+    <div class="slide-progress" id="progressPills">
+      <!-- Generated via JS -->
+    </div>
+
+    <div class="slide-counter">
+      <span id="currentSlideNum">01</span> / <span id="totalSlideNum">12</span> · <span id="slideTitleDisplay" style="color: var(--text-primary); font-weight: 600;">Portada</span>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn-nav" id="btnPrev" title="Anterior (←)">‹</button>
+      <button class="btn-nav" id="btnNext" title="Siguiente (→ o Espacio)">›</button>
+    </div>
+  </footer>
+
+  <!-- Speaker Notes Drawer -->
+  <aside class="notes-drawer" id="notesDrawer">
+    <div class="notes-header">
+      <span>Notas del Expositor</span>
+      <span id="notesSlideTag">SLIDE 01</span>
+    </div>
+    <div class="notes-body" id="notesContent">
+      Cargando notas...
+    </div>
+  </aside>
+
+  <!-- Lightbox Grid Modal -->
+  <div class="lightbox-modal" id="lightboxModal">
+    <div class="lightbox-header">
+      <div style="font-size: 18px; font-weight: 700; color: #fff;">Índice General de la Presentación</div>
+      <button class="btn-icon" id="btnCloseGrid">Cerrar ✕</button>
+    </div>
+    <div class="lightbox-grid" id="lightboxGrid">
+      <!-- Generated by JS -->
+    </div>
+  </div>
+
+  <script>
+    /* Speaker notes database matching report content */
+    const speakerNotes = [
+      "Bienvenida al equipo docente y compañeros de la Universidad de Atacama. Este trabajo demuestra cómo una auditoría rigurosa de datos de laboratorio puede salvar un proyecto minero de errores millonarios antes de ir a planta.",
+      "En Chile existen más de 764 depósitos de relaves según Cochilco. En Viñita Azul existen 30.000 toneladas asociadas a mineral de Veta Gruesa. Pero para que sea negocio, la metalurgia debe demostrar enriquecimiento selectivo.",
+      "Explicación didáctica: Usar la metáfora del pegamento y el aceite. El colector impermeabiliza el oro para que se pegue al aire. La cal regula el pH para que la pirita no le quite espacio en la burbuja.",
+      "Aquí revelamos los 4 hallazgos de auditoría: diferencia entre los 62 kg iniciales y los 36,29 kg reales, ganancia de 71,5 g en la primera división, corte asimétrico de ±8,89% y material rotulado como 'fresco'.",
+      "Énfasis técnico crítico: La Hoja1 usó 35% en masa (1.406 g de sólido). La Hoja3 aplicó 35% al volumen, cargando 3.234 g (+130% más). Si un laboratorista confunde esto, descalabra toda la pulpa y la agitación.",
+      "El D80 de 8,43 mm que estaba en la planilla es de gravilla fresca. En las fotos descubrimos una serie de tamices finos de 355 a 53 micrones con material beige que no se traspasó. Hay que digitalizar esos datos.",
+      "Punto clave del informe: El coeficiente r = 0,997 demuestra que en las 13 corridas el oro subió solo porque se sacó más masa con agua. La razón de enriquecimiento fue 1,007; el concentrado tiene la misma ley que la tierra que entró.",
+      "Al aplicar ANOVA riguroso bilateral con 6 grados de libertad, el modelo no es significativo globalmente (p = 0,090). Solo el pH superó el t crítico (p = 0,048), y el colector primario quedó cerca (p = 0,062).",
+      "La meta de 40 g/t Au con 50% de recuperación exige una razón de enriquecimiento de 16 y descartar el 96,8% de la masa. Hoy estamos en RE=1,08. Se necesita demostrar si una etapa Cleaner es viable.",
+      "Presentar el diseño experimental 2² + 3 centros en 3 jornadas. Tres réplicas independientes nos darán varianza real para no engañarnos con un único resultado afortunado.",
+      "Estándares QA/QC: Cierre de masa al 98-102% y balance de oro al 90-110%. Destacar la seguridad química con cal y el compromiso ambiental de no verter aguas residuales.",
+      "Conclusión clara y ejecutiva: Sí se justifica continuar investigando, pero primero resolviendo la muestra y ejecutando los 15 ensayos confirmatorios con pH y colector. No prometer reservas sin leyes trazables."
+    ];
+
+    /* Presentation State */
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+    const progressPills = document.getElementById('progressPills');
+    const currentSlideNum = document.getElementById('currentSlideNum');
+    const totalSlideNum = document.getElementById('totalSlideNum');
+    const slideTitleDisplay = document.getElementById('slideTitleDisplay');
+    const notesDrawer = document.getElementById('notesDrawer');
+    const notesContent = document.getElementById('notesContent');
+    const notesSlideTag = document.getElementById('notesSlideTag');
+    const lightboxModal = document.getElementById('lightboxModal');
+    const lightboxGrid = document.getElementById('lightboxGrid');
+    const ambientGlow = document.getElementById('ambientGlow');
+
+    totalSlideNum.textContent = String(totalSlides).padStart(2, '0');
+
+    // Build progress pills and lightbox items
+    slides.forEach((slide, idx) => {
+      // Progress pill
+      const pill = document.createElement('div');
+      pill.className = `progress-pill ${idx === 0 ? 'active' : ''}`;
+      pill.addEventListener('click', () => goToSlide(idx));
+      progressPills.appendChild(pill);
+
+      // Lightbox thumb
+      const thumb = document.createElement('div');
+      thumb.className = `lightbox-thumb ${idx === 0 ? 'active' : ''}`;
+      thumb.innerHTML = `
+        <div class="thumb-num">SLIDE ${String(idx + 1).padStart(2, '0')}</div>
+        <div class="thumb-title">${slide.getAttribute('data-title')}</div>
+      `;
+      thumb.addEventListener('click', () => {
+        goToSlide(idx);
+        toggleLightbox(false);
+      });
+      lightboxGrid.appendChild(thumb);
+    });
+
+    function updateSlideView() {
+      slides.forEach((s, idx) => {
+        s.classList.toggle('active', idx === currentSlide);
+      });
+
+      // Update pills
+      document.querySelectorAll('.progress-pill').forEach((p, idx) => {
+        p.classList.toggle('active', idx === currentSlide);
+      });
+
+      // Update Lightbox thumbs
+      document.querySelectorAll('.lightbox-thumb').forEach((t, idx) => {
+        t.classList.toggle('active', idx === currentSlide);
+      });
+
+      // Update counters
+      currentSlideNum.textContent = String(currentSlide + 1).padStart(2, '0');
+      const title = slides[currentSlide].getAttribute('data-title');
+      slideTitleDisplay.textContent = title;
+
+      // Update Notes
+      notesContent.textContent = speakerNotes[currentSlide] || "Sin notas adicionales.";
+      notesSlideTag.textContent = `SLIDE ${String(currentSlide + 1).padStart(2, '0')}`;
+
+      // Tweak ambient glow position
+      const colors = [
+        'rgba(255, 214, 10, 0.08)',
+        'rgba(48, 209, 88, 0.06)',
+        'rgba(255, 159, 10, 0.08)',
+        'rgba(255, 69, 58, 0.07)',
+        'rgba(100, 210, 255, 0.08)'
+      ];
+      ambientGlow.style.background = `radial-gradient(circle, ${colors[currentSlide % colors.length]} 0%, transparent 70%)`;
+    }
+
+    function goToSlide(index) {
+      if (index >= 0 && index < totalSlides) {
+        currentSlide = index;
+        updateSlideView();
+      }
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides - 1) {
+        goToSlide(currentSlide + 1);
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        goToSlide(currentSlide - 1);
+      }
+    }
+
+    function toggleNotes() {
+      notesDrawer.classList.toggle('open');
+      document.getElementById('btnNotes').classList.toggle('active', notesDrawer.classList.contains('open'));
+    }
+
+    function toggleLightbox(force) {
+      const show = force !== undefined ? force : !lightboxModal.classList.contains('active');
+      lightboxModal.classList.toggle('active', show);
+      document.getElementById('btnGrid').classList.toggle('active', show);
+    }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        document.exitFullscreen().catch(() => {});
+      }
+    }
+
+    // Keyboard bindings
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        prevSlide();
+      } else if (e.key.toLowerCase() === 'n') {
+        toggleNotes();
+      } else if (e.key.toLowerCase() === 'g') {
+        toggleLightbox();
+      } else if (e.key.toLowerCase() === 'f') {
+        toggleFullscreen();
+      } else if (e.key === 'Escape') {
+        toggleLightbox(false);
+        notesDrawer.classList.remove('open');
+        document.getElementById('btnNotes').classList.remove('active');
+      }
+    });
+
+    // Touch swipe support
+    let touchStartX = 0;
+    window.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; }, {passive: true});
+    window.addEventListener('touchend', (e) => {
+      let touchEndX = e.changedTouches[0].screenX;
+      if (touchStartX - touchEndX > 50) nextSlide();
+      if (touchEndX - touchStartX > 50) prevSlide();
+    }, {passive: true});
+
+    // Button event listeners
+    document.getElementById('btnNext').addEventListener('click', nextSlide);
+    document.getElementById('btnPrev').addEventListener('click', prevSlide);
+    document.getElementById('btnNotes').addEventListener('click', toggleNotes);
+    document.getElementById('btnGrid').addEventListener('click', () => toggleLightbox());
+    document.getElementById('btnCloseGrid').addEventListener('click', () => toggleLightbox(false));
+    document.getElementById('btnFullscreen').addEventListener('click', toggleFullscreen);
+
+    /* Flotation Simulator Animation Controller */
+    const pulpArea = document.getElementById('pulpArea');
+    const simSlider = document.getElementById('simSlider');
+    const simStatusText = document.getElementById('simStatusText');
+
+    function createBubble() {
+      if (!pulpArea) return;
+      const b = document.createElement('div');
+      b.className = 'bubble';
+      const size = Math.random() * 14 + 8;
+      b.style.width = `${size}px`;
+      b.style.height = `${size}px`;
+      b.style.left = `${Math.random() * 85 + 5}%`;
+      b.style.animationDuration = `${(4 / Number(simSlider.value || 3))}s`;
+
+      // Occasionally attach a gold speck to the bubble
+      if (Math.random() > 0.45) {
+        const gold = document.createElement('div');
+        gold.className = 'gold-spec';
+        gold.style.top = '-2px';
+        gold.style.right = '-2px';
+        b.appendChild(gold);
+      }
+
+      pulpArea.appendChild(b);
+      setTimeout(() => b.remove(), 4000);
+    }
+
+    function createGangue() {
+      if (!pulpArea) return;
+      const g = document.createElement('div');
+      g.className = 'gangue-spec';
+      g.style.left = `${Math.random() * 90 + 5}%`;
+      pulpArea.appendChild(g);
+      setTimeout(() => g.remove(), 4500);
+    }
+
+    let bubbleInterval = setInterval(createBubble, 280);
+    let gangueInterval = setInterval(createGangue, 450);
+
+    if (simSlider) {
+      simSlider.addEventListener('input', (e) => {
+        const val = Number(e.target.value);
+        clearInterval(bubbleInterval);
+        bubbleInterval = setInterval(createBubble, 600 / val);
+
+        const labels = ['Caudal Mínimo', 'Bajo Flujo', 'Actividad Normal', 'Alta Aireación', 'Turbulencia Crítica'];
+        simStatusText.textContent = labels[val - 1];
+        simStatusText.style.color = val === 5 ? 'var(--coral)' : (val >= 3 ? 'var(--emerald)' : 'var(--gold)');
+      });
+    }
+
+    /* Scatter Plot Tooltips */
+    const tooltipText = document.getElementById('chartTooltip');
+    document.querySelectorAll('.point-hover').forEach(pt => {
+      pt.addEventListener('mouseenter', () => {
+        const info = pt.getAttribute('data-info');
+        if (tooltipText && info) tooltipText.textContent = info;
+      });
+      pt.addEventListener('mouseleave', () => {
+        if (tooltipText) tooltipText.textContent = 'Pasa el cursor sobre los puntos para ver el balance';
+      });
+    });
+
+    // Initialize first view
+    updateSlideView();
+  </script>
+</body>
+</html>

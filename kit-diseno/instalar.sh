@@ -1,17 +1,19 @@
 #!/bin/sh
-# Instala el kit de diseño (skills, subagentes e instrucciones) a nivel de usuario,
+# Instala el kit (skills de diseño y académicas, subagentes e instrucciones) a nivel de usuario,
 # en ~/.claude, para que funcione en TODOS los proyectos de Claude Code.
 # Uso: sh kit-diseno/instalar.sh   (en Windows, desde Git Bash)
 set -eu
 here=$(cd "$(dirname "$0")" && pwd)
 src="$here/../.claude"
 dest="${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
-skills="banner-design brand design design-system design-taste-frontend frontend-slides impeccable slides ui-styling ui-ux-pro-max"
 
 mkdir -p "$dest/skills" "$dest/agents"
-for s in $skills; do
+n_skills=0
+for d in "$src"/skills/*/; do
+  s=$(basename "$d")
   rm -rf "${dest:?}/skills/$s"
   cp -R "$src/skills/$s" "$dest/skills/$s"
+  n_skills=$((n_skills + 1))
 done
 cp "$src"/agents/*.md "$dest/agents/"
 
@@ -30,4 +32,4 @@ fi
 mv "$tmp" "$md"
 
 n_agents=$(ls "$src"/agents/*.md | wc -l | tr -d ' ')
-echo "Kit de diseño instalado en $dest: 10 skills y $n_agents subagentes."
+echo "Kit instalado en $dest: $n_skills skills y $n_agents subagentes."

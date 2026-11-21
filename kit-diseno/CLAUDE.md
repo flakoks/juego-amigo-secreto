@@ -19,3 +19,15 @@ Para cambios muy pequeños (un color, un texto, un margen) no hace falta el fluj
 Skills instaladas: `design-taste-frontend` (taste-skill), `impeccable`, `ui-ux-pro-max` (con `design`, `design-system`, `brand`, `banner-design`, `slides` y `ui-styling`) y `frontend-slides`. Los subagentes de oficio de impeccable (`impeccable-*`) se usan cuando su skill los pida.
 
 Los textos de la interfaz van en el idioma del usuario o del proyecto; por defecto, en español.
+
+# Trabajo académico y análisis de datos
+
+| Tarea | Qué usar |
+|---|---|
+| Revisar un trabajo, informe, artículo o tesis | El subagente `revisor-academico` (aplica `revision-academica`) |
+| Anteproyecto, capítulos de tesis, APA 7, matriz de consistencia | La skill `tesis-guia` |
+| Presentación de defensa | `tesis-guia` para la estructura y `disenador-presentaciones` (o la skill `pptx`) para las diapositivas |
+| Que un texto suene natural y no a IA | La skill `humanizer`, conservando hechos, cifras y citas |
+| Proyecciones con datos y predicción de fallas | La skill `prediccion-fallas` |
+
+Nunca inventes fuentes, datos ni resultados: márcalos como pendientes.

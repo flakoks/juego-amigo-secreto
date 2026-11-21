@@ -8,6 +8,8 @@ Son skills de terceros copiadas en el proyecto, como hace `npx skills add … --
 | `design-taste-frontend` | [Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill) | `f6b7657` (v2.5.1) | MIT |
 | `ui-ux-pro-max`, `design`, `design-system`, `brand`, `banner-design`, `slides`, `ui-styling` | [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) | `2de1134` (v2.15.0) | MIT |
 | `frontend-slides` | [zarazhangrui/frontend-slides](https://github.com/zarazhangrui/frontend-slides) | `9906a34` | MIT |
+| `humanizer` | [blader/humanizer](https://github.com/blader/humanizer) | `a32f244` (v4.0.0) | MIT |
+| `tesis-guia`, `revision-academica`, `prediccion-fallas` y el agente `revisor-academico` | Propios de este repo | — | — |
 
 Los subagentes propios `disenador-web`, `disenador-presentaciones` y `critico-de-diseno` están en `agents/` y combinan estas skills. El flujo para usarlos está en `CLAUDE.md`, en la raíz del repo.
 

@@ -11,6 +11,17 @@ Son skills de terceros copiadas en el proyecto, como hace `npx skills add … --
 
 Los subagentes propios `disenador-web`, `disenador-presentaciones` y `critico-de-diseno` están en `agents/` y combinan estas skills. El flujo para usarlos está en `CLAUDE.md`, en la raíz del repo.
 
+## Instalarlo para todos los proyectos
+
+`kit-diseno/instalar.sh` copia estas skills, los subagentes y unas instrucciones globales (`kit-diseno/CLAUDE.md`) en `~/.claude`, a nivel de usuario. Así funcionan en cualquier proyecto del equipo donde se ejecute:
+
+```sh
+git clone --depth 1 -b ccr-e555d212-ngnwhk https://github.com/flakoks/juego-amigo-secreto.git ~/kit-diseno-claude
+sh ~/kit-diseno-claude/kit-diseno/instalar.sh
+```
+
+En Windows, ejecútalo desde Git Bash. Puedes repetirlo cuando quieras: reemplaza solo sus propias carpetas y su bloque dentro de `~/.claude/CLAUDE.md`.
+
 ## Qué no se instaló
 
 - **Los hooks de impeccable** (`settings.json` del repo original). Ejecutan su binario detector, que se descarga de GitHub Releases y se verifica con SHA-256, después de cada edición y al terminar cada turno. Para activarlos, copia ese `settings.json` en `.claude/settings.json`.

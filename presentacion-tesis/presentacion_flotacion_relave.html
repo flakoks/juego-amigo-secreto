@@ -1799,7 +1799,9 @@ function otherScreen(sd){const others=sd.screens.filter(s=>s!==sd.currentScreen)
 function presentar(){
   /* Con permiso de gestión de ventanas y dos pantallas: pantalla completa en el proyector y consola en el mismo clic */
   if(screensOK&&screenDet&&!isFs()){const t=otherScreen(screenDet);if(t){document.documentElement.requestFullscreen({screen:t}).catch(()=>{});const w=openConsole();if(!w)setTimeout(()=>showFsp(false),400);return}}
-  const w=openConsole();showFsp(!!w)}
+  const wasFs=isFs(),w=openConsole();
+  /* Chromium sale de pantalla completa al abrir una ventana nueva: se vuelve a ofrecer el paso 2 */
+  if(!wasFs)showFsp(!!w);else setTimeout(()=>{if(!isFs())showFsp(!!w)},600)}
 function showFsp(opened){if(isFs()&&opened)return;$("#fspH").textContent=opened?"Consola abierta en otra ventana":"El navegador bloqueó la consola";
   $("#fspP").textContent=opened?"Ahora lleva esta ventana al proyector y ponla en pantalla completa. El cronómetro y el guion quedan solo en la consola.":"Permite las ventanas emergentes para este archivo (icono a la derecha de la barra de direcciones) y vuelve a pulsar Presentar o la tecla P.";
   $("#fspScreen").hidden=!("getScreenDetails" in window);$("#fspMsg").textContent="";fsp.classList.add("on")}
